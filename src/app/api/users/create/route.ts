@@ -1,7 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 
+export async function OPTIONS(req: NextRequest) {
+  const headers: Record<string, string> = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  }
+  
+  return new NextResponse(null, { status: 200, headers })
+}
+
 export async function POST(req: NextRequest) {
+  // Add CORS headers
+  const headers: Record<string, string> = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  }
+
   try {
     console.log('🔍 User creation request received')
     
@@ -19,7 +36,7 @@ export async function POST(req: NextRequest) {
       console.error('❌ Supabase URL not configured')
       return NextResponse.json(
         { error: 'Supabase URL not configured. Please check your environment variables.' },
-        { status: 500 }
+        { status: 500, headers }
       )
     }
     
@@ -27,7 +44,7 @@ export async function POST(req: NextRequest) {
       console.error('❌ Supabase service role key not configured')
       return NextResponse.json(
         { error: 'Supabase service role key not configured. Please check your environment variables.' },
-        { status: 500 }
+        { status: 500, headers }
       )
     }
 
@@ -38,7 +55,7 @@ export async function POST(req: NextRequest) {
       console.error('❌ Missing required fields')
       return NextResponse.json(
         { error: 'All fields are required' },
-        { status: 400 }
+        { status: 400, headers }
       )
     }
 
@@ -54,7 +71,7 @@ export async function POST(req: NextRequest) {
         console.error('❌ Database connection failed:', testError)
         return NextResponse.json(
           { error: `Database connection failed: ${testError.message}. Please ensure the database schema is installed.` },
-          { status: 500 }
+          { status: 500, headers }
         )
       }
       console.log('✅ Database connection successful')
@@ -62,7 +79,7 @@ export async function POST(req: NextRequest) {
       console.error('❌ Database test error:', dbError)
       return NextResponse.json(
         { error: `Database test failed: ${dbError instanceof Error ? dbError.message : 'Unknown error'}` },
-        { status: 500 }
+        { status: 500, headers }
       )
     }
 
@@ -78,7 +95,7 @@ export async function POST(req: NextRequest) {
       console.error('❌ Database check error:', checkError)
       return NextResponse.json(
         { error: `Database error during user check: ${checkError.message}` },
-        { status: 500 }
+        { status: 500, headers }
       )
     }
 
@@ -86,7 +103,7 @@ export async function POST(req: NextRequest) {
       console.log('❌ User already exists:', existingUser.id)
       return NextResponse.json(
         { error: 'User with this email already exists' },
-        { status: 400 }
+        { status: 400, headers }
       )
     }
 
@@ -112,17 +129,17 @@ export async function POST(req: NextRequest) {
       console.error('❌ Database error during user creation:', error)
       return NextResponse.json(
         { error: `Failed to create user record: ${error.message}` },
-        { status: 500 }
+        { status: 500, headers }
       )
     }
 
     console.log('✅ User created successfully:', user)
-    return NextResponse.json({ user })
+    return NextResponse.json({ user }, { headers })
   } catch (error) {
     console.error('❌ Server error:', error)
     return NextResponse.json(
       { error: `Internal server error: ${error instanceof Error ? error.message : 'Unknown error'}` },
-      { status: 500 }
+      { status: 500, headers }
     )
   }
 }
