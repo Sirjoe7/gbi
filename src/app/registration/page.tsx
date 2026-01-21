@@ -49,7 +49,12 @@ export default function RegistrationPage() {
       })
 
       if (!response.ok) {
-        const errorData = await response.json()
+        let errorData
+        try {
+          errorData = await response.json()
+        } catch {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+        }
         throw new Error(errorData.error || 'Failed to create user record')
       }
 
@@ -80,7 +85,12 @@ export default function RegistrationPage() {
       })
 
       if (!response.ok) {
-        const errorData = await response.json()
+        let errorData
+        try {
+          errorData = await response.json()
+        } catch {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+        }
         throw new Error(errorData.error || 'Payment initialization failed')
       }
 
@@ -181,6 +191,7 @@ export default function RegistrationPage() {
                     className="w-full px-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900"
                   >
                     <option value="student">Student</option>
+                    <option value="graduate">Graduate</option>
                     <option value="entrepreneur">Entrepreneur</option>
                   </select>
                 </div>
@@ -194,7 +205,7 @@ export default function RegistrationPage() {
                     onChange={handleInputChange}
                     required
                     className="w-full px-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900"
-                    placeholder="John"
+                    placeholder="First Name"
                   />
                 </div>
 
@@ -207,7 +218,7 @@ export default function RegistrationPage() {
                     onChange={handleInputChange}
                     required
                     className="w-full px-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900"
-                    placeholder="Doe"
+                    placeholder="Last Name"
                   />
                 </div>
 

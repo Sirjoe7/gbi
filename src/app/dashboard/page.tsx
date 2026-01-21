@@ -53,8 +53,12 @@ export default function DashboardPage() {
         // Load user data from API
         const userResponse = await fetch(`/api/users/${userId}`)
         if (userResponse.ok) {
-          const userData = await userResponse.json()
-          setUser(userData.user)
+          try {
+            const userData = await userResponse.json()
+            setUser(userData.user)
+          } catch (error) {
+            console.error('Failed to parse user response:', error)
+          }
         } else {
           // Fallback to user info from localStorage
           setUser({
@@ -76,8 +80,12 @@ export default function DashboardPage() {
         // Load documents
         const response = await fetch(`/api/documents?userId=${userId}`)
         if (response.ok) {
-          const data = await response.json()
-          setDocuments(data.documents || [])
+          try {
+            const data = await response.json()
+            setDocuments(data.documents || [])
+          } catch (error) {
+            console.error('Failed to parse documents response:', error)
+          }
         }
       } catch (error) {
         console.error('Error loading dashboard data:', error)

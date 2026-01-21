@@ -21,7 +21,12 @@ function SuccessPageContent() {
 
     // Verify payment and get user info
     fetch(`/api/registration/success?session_id=${sessionId}`)
-      .then(response => response.json())
+      .then(async response => {
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+        }
+        return response.json()
+      })
       .then(data => {
         if (data.error) {
           console.error('Error:', data.error)

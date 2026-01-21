@@ -171,11 +171,11 @@ export default function Home() {
               Building bridges between cultures, careers, and continents through exceptional mentorship experiences.
             </p>
             <div className="bg-gradient-to-r from-indigo-900 to-purple-900 text-white p-6 rounded-2xl shadow-xl max-w-4xl mx-auto">
-              <h3 className="text-2xl font-bold mb-4">🚀 A Historic First</h3>
+              <h3 className="text-2xl font-bold mb-4">A Historic First</h3>
               <p className="text-lg leading-relaxed">
                 The Global Bridge Initiative is the <span className="font-bold text-yellow-300">first-ever program</span> of its kind, 
                 designed to create unprecedented global connections through mentorship. 
-                <span className="font-bold text-yellow-300">2026 applicants will be pioneers</span>, 
+                <span className="font-bold text-yellow-300"> 2026 applicants will be pioneers</span>, 
                 joining the inaugural cohort that will shape the future of international collaboration and innovation.
               </p>
             </div>

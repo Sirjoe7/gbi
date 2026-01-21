@@ -66,8 +66,12 @@ export default function DocumentsPage() {
         // Load existing documents
         const response = await fetch(`/api/documents?userId=${mockUser.id}`)
         if (response.ok) {
-          const data = await response.json()
-          setDocuments(data.documents || [])
+          try {
+            const data = await response.json()
+            setDocuments(data.documents || [])
+          } catch (error) {
+            console.error('Failed to parse documents response:', error)
+          }
         }
       } catch (error) {
         console.error('Error loading user data:', error)
@@ -98,7 +102,12 @@ export default function DocumentsPage() {
       })
 
       if (!response.ok) {
-        const error = await response.json()
+        let error
+        try {
+          error = await response.json()
+        } catch {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+        }
         throw new Error(error.error || 'Upload failed')
       }
 
