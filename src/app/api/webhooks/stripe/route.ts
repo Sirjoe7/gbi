@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import { getStripe } from '@/lib/stripe'
-import { supabaseAdmin } from '@/lib/supabase'
+import { getSupabaseAdmin } from '@/lib/supabase'
 
 export async function POST(req: NextRequest) {
   const body = await req.text()
@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
         
         if (session.metadata?.registration_fee === 'true') {
           // Update user payment status
-          const { error } = await supabaseAdmin
+          const { error } = await getSupabaseAdmin()
             .from('users')
             .update({
               payment_status: 'paid',
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
         
         if (session.metadata?.registration_fee === 'true') {
           // Update user payment status to failed
-          const { error } = await supabaseAdmin
+          const { error } = await getSupabaseAdmin()
             .from('users')
             .update({
               payment_status: 'failed',

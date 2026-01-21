@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase'
+import { getSupabaseAdmin } from '@/lib/supabase'
 
 export async function OPTIONS(req: NextRequest) {
   const headers: Record<string, string> = {
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
     // Test database connection
     console.log('🔍 Testing database connection...')
     try {
-      const { data: testData, error: testError } = await supabaseAdmin
+      const { data: testData, error: testError } = await getSupabaseAdmin()
         .from('users')
         .select('count')
         .limit(1)
@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
 
     // Check if user already exists
     console.log('🔍 Checking if user already exists...')
-    const { data: existingUser, error: checkError } = await supabaseAdmin
+    const { data: existingUser, error: checkError } = await getSupabaseAdmin()
       .from('users')
       .select('id')
       .eq('email', email)
@@ -109,7 +109,7 @@ export async function POST(req: NextRequest) {
 
     // Create new user record
     console.log('🔍 Creating new user record...')
-    const { data: user, error } = await supabaseAdmin
+    const { data: user, error } = await getSupabaseAdmin()
       .from('users')
       .insert({
         email,

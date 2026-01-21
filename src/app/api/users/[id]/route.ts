@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase'
+import { getSupabaseAdmin } from '@/lib/supabase'
 
 interface RouteContext {
   params: Promise<{ id: string }>
@@ -19,7 +19,7 @@ export async function GET(
       )
     }
 
-    const { data: user, error } = await supabaseAdmin
+    const { data: user, error } = await getSupabaseAdmin()
       .from('users')
       .select('*')
       .eq('id', id)

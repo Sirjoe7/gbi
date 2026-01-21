@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase'
+import { getSupabaseAdmin } from '@/lib/supabase'
 import { getStripe } from '@/lib/stripe'
 import { sendWelcomeEmail } from '@/lib/email'
 
@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Get user by email
-    const { data: user, error } = await supabaseAdmin
+    const { data: user, error } = await getSupabaseAdmin()
       .from('users')
       .select('*')
       .eq('email', session.customer_email as string)
@@ -59,7 +59,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Update user payment status
-    await supabaseAdmin
+    await getSupabaseAdmin()
       .from('users')
       .update({ 
         payment_status: 'paid',

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase'
+import { getSupabaseAdmin } from '@/lib/supabase'
 
 export async function GET(req: NextRequest) {
   try {
@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
       )
     }
 
-    const { data: documents, error } = await supabaseAdmin
+    const { data: documents, error } = await getSupabaseAdmin()
       .from('documents')
       .select('*')
       .eq('user_id', userId)
@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
     console.log('📊 FileSize:', file.size)
     console.log('🔤 FileType:', file.type)
     
-    const { data: uploadData, error: uploadError } = await supabaseAdmin.storage
+    const { data: uploadData, error: uploadError } = await getSupabaseAdmin().storage
       .from('documents')
       .upload(fileName, file)
 
@@ -101,12 +101,12 @@ export async function POST(req: NextRequest) {
     console.log('✅ File uploaded successfully:', uploadData.path)
 
     // Get public URL
-    const { data: urlData } = supabaseAdmin.storage
+    const { data: urlData } = getSupabaseAdmin().storage
       .from('documents')
       .getPublicUrl(fileName)
 
     // Save document record in database
-    const { data: document, error: dbError } = await supabaseAdmin
+    const { data: document, error: dbError } = await getSupabaseAdmin()
       .from('documents')
       .insert({
         user_id: userId,
@@ -149,7 +149,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     // Get document info before deletion
-    const { data: document } = await supabaseAdmin
+    const { data: document } = await getSupabaseAdmin()
       .from('documents')
       .select('file_url')
       .eq('id', documentId)
@@ -162,13 +162,13 @@ export async function DELETE(req: NextRequest) {
       const filePath = fileName.split('_').slice(1).join('_').replace(/_\d+_/, '/')
 
       // Delete from storage
-      await supabaseAdmin.storage
+      await getSupabaseAdmin().storage
         .from('documents')
         .remove([filePath])
     }
 
     // Delete from database
-    const { error } = await supabaseAdmin
+    const { error } = await getSupabaseAdmin()
       .from('documents')
       .delete()
       .eq('id', documentId)
