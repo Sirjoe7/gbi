@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { stripe } from '@/lib/stripe'
+import { getStripe } from '@/lib/stripe'
 import { sendWelcomeEmail } from '@/lib/email'
 
 export async function OPTIONS(req: NextRequest) {
@@ -34,7 +34,8 @@ export async function GET(req: NextRequest) {
     }
 
     // Retrieve the session from Stripe
-    const session = await stripe.checkout.sessions.retrieve(sessionId)
+    const stripeInstance = getStripe()
+    const session = await stripeInstance.checkout.sessions.retrieve(sessionId)
     
     if (!session) {
       return NextResponse.json(

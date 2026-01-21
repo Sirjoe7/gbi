@@ -1,8 +1,22 @@
 import Stripe from 'stripe'
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+let stripeClient: Stripe | null = null
+
+export function getStripe() {
+  if (!stripeClient) {
+    const key = process.env.STRIPE_SECRET_KEY
+    if (!key) {
+      throw new Error('Missing STRIPE_SECRET_KEY environment variable')
+    }
+    stripeClient = new Stripe(key, {
+      apiVersion: '2025-12-15.clover',
+    })
+  }
+  return stripeClient
+}
 
 export const getStripeProducts = async () => {
+  const stripe = getStripe()
   const products = await stripe.products.list({
     active: true,
   })
@@ -10,6 +24,7 @@ export const getStripeProducts = async () => {
 }
 
 export const createCheckoutSession = async (priceId: string, customerEmail: string) => {
+  const stripe = getStripe()
   const session = await stripe.checkout.sessions.create({
     mode: 'payment',
     payment_method_types: ['card'],

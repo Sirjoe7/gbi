@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { stripe, createCheckoutSession } from '@/lib/stripe'
+import { getStripe, createCheckoutSession } from '@/lib/stripe'
 
 export async function POST(req: NextRequest) {
   try {
@@ -28,15 +28,16 @@ export async function POST(req: NextRequest) {
       // If price doesn't exist, create a new price dynamically
       if (priceError.message?.includes('No such price')) {
         console.log('Creating dynamic price for $15 registration fee...')
+        const stripeInstance = getStripe()
         
         // Create a product first
-        const product = await stripe.products.create({
+        const product = await stripeInstance.products.create({
           name: 'GBI Registration Fee',
           description: 'Global Bridge Initiative 2026 Amsterdam Summit Registration',
         })
         
         // Create a price for the product
-        const newPrice = await stripe.prices.create({
+        const newPrice = await stripeInstance.prices.create({
           product: product.id,
           unit_amount: 1500, // $15.00 in cents
           currency: 'usd',
