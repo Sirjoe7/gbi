@@ -1,6 +1,17 @@
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+let resendClient: Resend | null = null
+
+export function getResend() {
+  if (!resendClient) {
+    const apiKey = process.env.RESEND_API_KEY
+    if (!apiKey) {
+      throw new Error('Missing RESEND_API_KEY environment variable')
+    }
+    resendClient = new Resend(apiKey)
+  }
+  return resendClient
+}
 
 export interface WelcomeEmailData {
   firstName: string
@@ -17,6 +28,7 @@ export async function sendWelcomeEmail(data: WelcomeEmailData) {
   try {
     const { firstName, lastName, email, roleType, country, educationLevel, fieldOfStudy, careerStage } = data
     
+    const resend = getResend()
     const { data: emailData, error } = await resend.emails.send({
       from: 'Global Bridge Initiative <noreply@globalbridgeinitiative.org>',
       to: [email],
