@@ -1,8 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Static export for Netlify
-  output: 'export',
+  // Netlify configuration for server functions
   trailingSlash: true,
   images: {
     unoptimized: true
