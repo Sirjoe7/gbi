@@ -3,11 +3,12 @@ import { Resend } from 'resend'
 let resendClient: Resend | null = null
 
 export function getResend() {
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey) {
+    console.warn('RESEND_API_KEY environment variable not set')
+    return null
+  }
   if (!resendClient) {
-    const apiKey = process.env.RESEND_API_KEY
-    if (!apiKey) {
-      throw new Error('Missing RESEND_API_KEY environment variable')
-    }
     resendClient = new Resend(apiKey)
   }
   return resendClient
@@ -29,6 +30,11 @@ export async function sendWelcomeEmail(data: WelcomeEmailData) {
     const { firstName, lastName, email, roleType, country, educationLevel, fieldOfStudy, careerStage } = data
     
     const resend = getResend()
+    if (!resend) {
+      console.error('Resend client not available - check RESEND_API_KEY environment variable')
+      return { success: false, error: 'Email service not configured' }
+    }
+    
     const { data: emailData, error } = await resend.emails.send({
       from: 'Global Bridge Initiative <noreply@globalbridgeinitiative.org>',
       to: [email],
