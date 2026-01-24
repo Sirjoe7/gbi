@@ -9,7 +9,6 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@netlify/next": "^1.4.9",
     "@radix-ui/react-slot": "^1.2.4",
     "@stripe/stripe-js": "^8.6.1",
     "@supabase/ssr": "^0.8.0",
@@ -24,6 +23,7 @@
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
+    "@netlify/next": "^1.0.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

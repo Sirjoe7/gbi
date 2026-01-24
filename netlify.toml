@@ -1,6 +1,6 @@
 [build]
   command = "npm run build"
-  publish = ".next"
+  publish = "out"
 
 [build.environment]
   NODE_VERSION = "20.9.0"
@@ -14,32 +14,6 @@
   SUPABASE_SERVICE_ROLE_KEY = ""
   STRIPE_PUBLISHABLE_KEY = ""
   STRIPE_SECRET_KEY = ""
-
-# Handle Next.js API routes - these need to be serverless functions
-[[redirects]]
-  from = "/api/users/create"
-  to = "/.netlify/functions/api/users/create"
-  status = 200
-
-[[redirects]]
-  from = "/api/checkout"
-  to = "/.netlify/functions/api/checkout"
-  status = 200
-
-[[redirects]]
-  from = "/api/registration/success"
-  to = "/.netlify/functions/api/registration/success"
-  status = 200
-
-[[redirects]]
-  from = "/api/documents"
-  to = "/.netlify/functions/api/documents"
-  status = 200
-
-[[redirects]]
-  from = "/api/users/*"
-  to = "/.netlify/functions/api/users/:splat"
-  status = 200
 
 # Handle Next.js static assets
 [[redirects]]
