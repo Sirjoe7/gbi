@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { getStripe } from '@/lib/stripe'
-import { sendWelcomeEmail } from '@/lib/email'
 
 export async function OPTIONS(req: NextRequest) {
   const headers: Record<string, string> = {
@@ -68,29 +67,9 @@ export async function GET(req: NextRequest) {
       })
       .eq('id', user.id)
 
-    // Send welcome email
-    try {
-      const emailResult = await sendWelcomeEmail({
-        firstName: user.first_name,
-        lastName: user.last_name,
-        email: user.email,
-        roleType: user.role_type,
-        country: user.country,
-        educationLevel: user.education_level,
-        fieldOfStudy: user.field_of_study,
-        careerStage: user.career_stage
-      })
-      
-      if (!emailResult.success) {
-        console.error('Failed to send welcome email:', emailResult.error)
-        // Don't fail the request, just log the error
-      } else {
-        console.log('Welcome email sent successfully to:', user.email)
-      }
-    } catch (emailError) {
-      console.error('Email service error:', emailError)
-      // Don't fail the request, just log the error
-    }
+    // Log successful registration (email functionality removed)
+    console.log(`User ${user.email} successfully completed registration payment`)
+    console.log(`Registration details: ${user.first_name} ${user.last_name}, ${user.role_type}, ${user.country}`)
 
     return NextResponse.json({ user }, { headers })
   } catch (error) {
